@@ -1,0 +1,3 @@
+[submodule "getssl"]
+	path = getssl
+	url = git@github.com:srvrco/getssl.git
