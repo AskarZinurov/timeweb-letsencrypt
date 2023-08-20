@@ -1,16 +1,24 @@
-FROM python:slim
+FROM python:alpine
 
-ENV USER getssl
-ENV HOMEDIR /home/$USER
-ENV PATH="${PATH}:/home/${USER}"
+RUN apk --no-cache add bash openssl curl jq bind-tools && \
+    pip install twc-cli
+
+ENV USER=getssl
+ENV HOMEDIR=/getssl
+RUN addgroup $USER && adduser -G $USER -S -h $HOMEDIR $USER
+
+ENV PATH="${PATH}:${HOMEDIR}"
 ENV TWC_CONFIG_FILE=/run/secrets/timeweb-getssl-twcrc
+ENV HOME=$HOMEDIR
 
-RUN groupadd $USER && useradd -m $USER -g $USER
-
-RUN pip install twc-cli
-COPY --chown=$USER:$USER --chmod=700 getssl/getssl $HOMEDIR
-RUN install -d -m 0755 -o $USER -g $USER $HOMEDIR/.getssl
-
-USER $USER
 WORKDIR $HOMEDIR
-VOLUME $HOMEDIR/.getssl
+USER $USER
+
+COPY --chmod=700 --chown=$USER:$USER getssl/getssl $HOMEDIR
+RUN install -d -m 0755 $HOMEDIR/.getssl
+
+ADD --chown=$USER:$USER src ./src
+
+VOLUME ["${HOMEDIR}/.getssl"]
+
+ENTRYPOINT ["getssl", "--all"]

@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+fulldomain="$1"
+
+acme_record_id=$(twc domain record list --all "$fulldomain" -o json | jq -c '.dns_records | .[] | select((.data.subdomain != null) and (.data.subdomain | contains("_acme-challenge"))) .id')
+twc domain record rm "$domain" "$acme_record_id"
