@@ -1,7 +1,7 @@
 FROM python:alpine
 
 RUN apk --no-cache add bash openssl curl jq bind-tools && \
-    pip install twc-cli
+    pip install twc-cli requests
 
 ENV USER=getssl
 ENV HOMEDIR=/getssl
