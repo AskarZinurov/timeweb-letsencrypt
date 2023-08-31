@@ -4,4 +4,3 @@ fulldomain="${1}"
 token="${2}"
 
 twc domain record add "_acme-challenge.$fulldomain" --type TXT --value "$token"
-

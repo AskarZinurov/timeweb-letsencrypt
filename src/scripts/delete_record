@@ -2,5 +2,8 @@
 
 fulldomain="$1"
 
-acme_record_id=$(twc domain record list --all "$fulldomain" -o json | jq -c '.dns_records | .[] | select((.data.subdomain != null) and (.data.subdomain | contains("_acme-challenge"))) .id')
-twc domain record rm "$domain" "$acme_record_id"
+domain_root=$(echo "$fulldomain" | awk -F\. '{print $(NF-1) FS $NF}')
+subdomain=${fulldomain%.$domain_root}
+
+acme_record_id=$(twc domain record list --all "$domain_root" -o json | jq -c '.dns_records | .[] | select((.data.subdomain != null) and (.data.subdomain | contains("_acme-challenge"))) .id')
+twc domain record rm "$domain_root" "$acme_record_id"

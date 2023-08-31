@@ -1,4 +1,4 @@
-CURRENT_VERSION = "0.0.3"
+CURRENT_VERSION = "0.0.4"
 IMAGE = "timeweb-getssl"
 
 build:
