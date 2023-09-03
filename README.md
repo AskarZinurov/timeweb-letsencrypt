@@ -48,3 +48,12 @@ getssl --all
 Podman systemd services generation [HOWTO](https://www.redhat.com/sysadmin/podman-run-pods-systemd-services).
 Also [here is](https://access.redhat.com/documentation/ru-ru/red_hat_enterprise_linux/8/html/building_running_and_managing_containers/assembly_porting-containers-to-systemd-using-podman_building-running-and-managing-containers) great feature reference.
 The sample pod definition you can find in `pod.yml`.
+
+### Deploy to Kubernetes
+
+The supposed approach to use this image is to create Kubernetes stateful CronJob which will periodically check and update configured certificates.
+The example terraform configuration for kubernetes provider can be found in `main.tf.example` file. 
+The only thing you should do, is to provide required configuration in
+`kubernetes_config_map_v1.config` and `kubernetes_config_map_v1.custom_scripts` configmaps and create `getssl-twc-config` named secret. 
+The secret should contain Timeweb CLI config file. `kubernetes_config_map_v1.config` configmap contains your domain names, 
+the second is customized getssl config, which is specific for each certificate and would be mounted into related getssl work subfolder.
